@@ -7,11 +7,9 @@ const app = express();
 // middle-ware
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(express.static(`${__dirname}/public`));
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}...`);
-});
+module.exports = app;
