@@ -11,12 +11,13 @@ const {
 
 const router = express.Router();
 
-router.param('id', checkId);
+// router.param('id', checkId);
 
 router
   .route('/')
   .get(getAllTours)
-  .post(checkBody, createTour);
+  .post(createTour)
+  // .post(checkBody, createTour);  
 
 router
   .route('/:id')
