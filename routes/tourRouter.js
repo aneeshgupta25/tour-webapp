@@ -7,9 +7,7 @@ const {
   updateTour,
   alias,
   getTourStats,
-  getMonthlyPlan,
-  checkId,
-  checkBody
+  getMonthlyPlan
 } = require('../controllers/tourController');
 
 const router = express.Router();

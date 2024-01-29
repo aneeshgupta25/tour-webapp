@@ -19,7 +19,7 @@ mongoose
     console.log('DB connected!');
   })
   .catch((err) => {
-    console.log(err);
+    // console.log(err);
   });
 
 
@@ -29,7 +29,7 @@ const importData = async () => {
         await Tour.create(tours)
         console.log('Successfully added to DB')
     } catch(err) {
-        console.log(err);
+        // console.log(err);
     }
     process.exit()
 }
@@ -39,7 +39,7 @@ const deleteExistingData = async () => {
         await Tour.deleteMany()
         console.log('Successfully deleted!');        
     } catch(err) {
-        console.log(err)
+        // console.log(err)
     }
     process.exit()
 }
