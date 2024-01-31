@@ -22,7 +22,13 @@ router
 router
   .route('/:id')
   .patch(tourController.updateTour)
-  .delete(tourController.deleteTour)
+  .delete(
+    // Middleware stack in order
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    // Controller for this action
+    tourController.deleteTour,
+  )
   .get(tourController.getTour);
 
 module.exports = router;
