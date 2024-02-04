@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function (next) {
-  // remove passwordConfirm field befor          e saving to db
+  // remove passwordConfirm field before saving to db
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
