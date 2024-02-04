@@ -10,6 +10,15 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  })
+});
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Throw error if user tries to update password
   if (req.body.password || req.body.passwordConfirm)
@@ -30,9 +39,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      user: updatedUser
-    }
-  })
+      user: updatedUser,
+    },
+  });
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
