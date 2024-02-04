@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'User must have password'],
     minlength: [8, 'Password must have a length of 8'],
-    select: false,
+    select: false,    
   },
   passwordConfirm: {
     type: String,
@@ -45,11 +45,17 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function (next) {
-  // remove passwordConfirm field before saving to db
+  // remove passwordConfirm field befor          e saving to db
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
+  next();
+});
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
