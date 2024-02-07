@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const validator = require('validator')
+const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -9,8 +9,14 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a name'],
       unique: true,
       trim: true,
-      maxlength: [40, 'A tour must have name less than or equal to 40 characters'],
-      minlength: [10, 'A tour must have name greater than or equal to 10 characters'],      
+      maxlength: [
+        40,
+        'A tour must have name less than or equal to 40 characters',
+      ],
+      minlength: [
+        10,
+        'A tour must have name greater than or equal to 10 characters',
+      ],
     },
     slug: {
       type: String,
@@ -28,14 +34,14 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a difficulty'],
       enum: {
         values: ['easy', 'medium', 'difficult'],
-        message: 'Difficulty can be easy, medium or difficult'
-      }
+        message: 'Difficulty can be easy, medium or difficult',
+      },
     },
     ratingsAverage: {
       type: Number,
       default: 4.5,
       min: [1, 'Rating must be greater than or equal to 1.0'],
-      max: [5, 'Rating must be lesser than or equal to 5.0']
+      max: [5, 'Rating must be lesser than or equal to 5.0'],
     },
     ratingsQuantity: {
       type: Number,
@@ -48,11 +54,11 @@ const tourSchema = new mongoose.Schema(
     priceDiscount: {
       type: Number,
       validate: {
-        validator: function(val) {
-          return val < this.price
+        validator: function (val) {
+          return val < this.price;
         },
-        message: `Discount ({VALUE}) can't be greater than regular price`
-      }
+        message: `Discount ({VALUE}) can't be greater than regular price`,
+      },
     },
     summary: {
       type: String,
@@ -78,6 +84,30 @@ const tourSchema = new mongoose.Schema(
       default: false,
     },
     startDates: [Date],
+    startLocation: {
+      // GeoJSON (GeoSpatial Data)
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],    
   },
   {
     toJSON: { virtuals: true },
