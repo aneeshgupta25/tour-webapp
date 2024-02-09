@@ -8,7 +8,7 @@ router.use(authController.protect);
 
 router
   .route('/')
-  .get(reviewController.getAllReviews)
+  .get(reviewController.setReviewTour, reviewController.getAllReviews)
   .post(
     authController.restrictTo('user'),
     reviewController.setTourUserIds,
