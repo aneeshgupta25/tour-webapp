@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -13,6 +14,14 @@ const tourRouter = require('./routes/tourRouter');
 const reviewRouter = require('./routes/reviewRouter');
 
 const app = express();
+
+// Set up Pug for template engine
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+// GLOBAL MIDDLEWARES
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public'))); // `${__dirname}/public`
+
 // Security HTTP Headers
 app.use(helmet());
 
@@ -31,7 +40,6 @@ app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
-
 // Data sanitization against NoSQL Query Injection
 app.use(mongoSanitize());
 // Data sanitization against XSS
@@ -49,12 +57,15 @@ app.use(
     ],
   }),
 );
-
-// Serving static files
-app.use(express.static(`${__dirname}/public`));
+// ROUTES
+app.get('/', (req, res) => {
+  res.status(200).render('base', {
+    tour: 'My Favorite Tour',
+  });
+});
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter)
+app.use('/api/v1/reviews', reviewRouter);
 
 app.all('*', (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server!`);
