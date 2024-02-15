@@ -1,6 +1,9 @@
-const login = async (email, password) => {
+import axios from 'axios';
+import { showAlert, hideAlert } from './alerts';
+
+export const login = async (email, password) => {
   try {
-    const result = await axios({
+    const res = await axios({
       method: 'POST',
       url: 'http://127.0.0.1:3000/api/v1/users/login',
       data: {
@@ -9,21 +12,33 @@ const login = async (email, password) => {
       },
     });
 
-    if (result.data.status === 'success') {
-      alert('Logged in successfully!');
+    if (res.data.status === 'success') {
+      showAlert('success', 'Logged in successfully!');
       window.setTimeout(() => {
+        hideAlert();
         location.assign('/');
       }, 1500);
     }
   } catch (e) {
-    alert(e.response.data.message);
+    showAlert('error', e.response.data.message);
   }
 };
 
-document.querySelector('.form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-
-  login(email, password);
-});
+export const logout = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://127.0.0.1:3000/api/v1/users/logout',
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', 'Logged out successfully!')
+      window.setTimeout(() => {
+        hideAlert();
+        // true param ensures to load from server, else might load from cache
+        location.reload(true);
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', 'Error logging out! Kindly try again');
+  }
+};
