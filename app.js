@@ -6,13 +6,14 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorController = require('./controllers/errorController');
 const userRouter = require('./routes/userRouter');
 const tourRouter = require('./routes/tourRouter');
 const reviewRouter = require('./routes/reviewRouter');
-const viewRouter = require('./routes/viewRouter')
+const viewRouter = require('./routes/viewRouter');
 
 const app = express();
 
@@ -41,6 +42,8 @@ app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+// Cookies parser, reading cookies from req.cookies
+app.use(cookieParser());
 // Data sanitization against NoSQL Query Injection
 app.use(mongoSanitize());
 // Data sanitization against XSS
@@ -62,30 +65,34 @@ app.use(
 // Leaflet Setup for interactive maps
 const scriptSrcUrls = ['https://unpkg.com/', 'https://tile.openstreetmap.org'];
 const styleSrcUrls = [
-    'https://unpkg.com/',
-    'https://tile.openstreetmap.org',
-    'https://fonts.googleapis.com/'
+  'https://unpkg.com/',
+  'https://tile.openstreetmap.org',
+  'https://fonts.googleapis.com/',
 ];
 const connectSrcUrls = ['https://unpkg.com', 'https://tile.openstreetmap.org'];
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
- 
+
 //set security http headers
 app.use(
-    helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: [],
-        connectSrc: ["'self'", ...connectSrcUrls],
-        scriptSrc: ["'self'", ...scriptSrcUrls],
-        styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-        workerSrc: ["'self'", 'blob:'],
-        objectSrc: [],
-        imgSrc: ["'self'", 'blob:', 'data:', 'https:'],
-        fontSrc: ["'self'", ...fontSrcUrls]
-      }
-    })
-  );
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: [],
+      connectSrc: ["'self'", ...connectSrcUrls],
+      scriptSrc: ["'self'", ...scriptSrcUrls],
+      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+      workerSrc: ["'self'", 'blob:'],
+      objectSrc: [],
+      imgSrc: ["'self'", 'blob:', 'data:', 'https:'],
+      fontSrc: ["'self'", ...fontSrcUrls],
+    },
+  }),
+);
 
-
+// Test Middleware
+app.use((req, res, next) => {
+  console.log(req.cookies);
+  next();
+});
 
 // ROUTES
 app.use('/', viewRouter);
