@@ -10,10 +10,11 @@ const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorController = require('./controllers/errorController');
-const userRouter = require('./routes/userRouter');
-const tourRouter = require('./routes/tourRouter');
-const reviewRouter = require('./routes/reviewRouter');
-const viewRouter = require('./routes/viewRouter');
+const userRoutes = require('./routes/userRoutes');
+const tourRoutes = require('./routes/tourRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const bookingsRoutes = require('./routes/bookingsRoutes');
+const viewRoutes = require('./routes/viewRoutes');
 
 const app = express();
 
@@ -96,10 +97,11 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
-app.use('/', viewRouter);
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter);
+app.use('/', viewRoutes);
+app.use('/api/v1/tours', tourRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/bookings', bookingsRoutes);
 
 app.all('*', (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server!`);
