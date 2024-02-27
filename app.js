@@ -70,6 +70,7 @@ const scriptSrcUrls = [
   'https://unpkg.com/',
   'https://tile.openstreetmap.org',
   'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js',
+  'https://js.stripe.com'
 ];
 const styleSrcUrls = [
   'https://unpkg.com/',

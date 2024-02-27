@@ -22,7 +22,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         quantity: 1,
         price_data: {
           currency: 'inr',
-          unit_amount: tour.price,
+          unit_amount: tour.price * 80,
           product_data: {
             name: `${tour.name} Tour`,
             description: tour.summary,
