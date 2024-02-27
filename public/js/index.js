@@ -13,8 +13,7 @@ const updatePasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 
 if (mapBox) {
-  const locations = JSON.parse(map.dataset.locations);
-  console.log(locations)
+  const locations = JSON.parse(map.dataset.locations);  
   displayMap(locations);
 }
 if (loginForm) {

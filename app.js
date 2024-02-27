@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const globalErrorController = require('./controllers/errorController');
@@ -70,7 +71,7 @@ const scriptSrcUrls = [
   'https://unpkg.com/',
   'https://tile.openstreetmap.org',
   'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js',
-  'https://js.stripe.com'
+  'https://js.stripe.com',
 ];
 const styleSrcUrls = [
   'https://unpkg.com/',
@@ -101,6 +102,9 @@ app.use(
     },
   }),
 );
+
+// compresses the response sent by the API to client
+app.use(compression())
 
 // Test Middleware
 app.use((req, res, next) => {
