@@ -26,7 +26,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public'))); // `${__dirname}/public`
 
 // Security HTTP Headers
-app.use(helmet());
+// app.use(helmet());
 
 // Development Logging
 if (process.env.NODE_ENV === 'development') {
@@ -65,7 +65,12 @@ app.use(
 );
 
 // Leaflet Setup for interactive maps
-const scriptSrcUrls = ['https://unpkg.com/', 'https://tile.openstreetmap.org'];
+// Leaflet Setup for interactive maps
+const scriptSrcUrls = [
+  'https://unpkg.com/',
+  'https://tile.openstreetmap.org',
+  'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js',
+];
 const styleSrcUrls = [
   'https://unpkg.com/',
   'https://tile.openstreetmap.org',
@@ -77,9 +82,15 @@ const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 //set security http headers
 app.use(
   helmet.contentSecurityPolicy({
+    useDefaults: false,
     directives: {
-      defaultSrc: [],
-      connectSrc: ["'self'", ...connectSrcUrls],
+      defaultSrc: ["'self'"],
+      connectSrc: [
+        "'self'",
+        'http://127.0.0.1:*',
+        'http://localhost:*',
+        ...connectSrcUrls,
+      ],
       scriptSrc: ["'self'", ...scriptSrcUrls],
       styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
       workerSrc: ["'self'", 'blob:'],
