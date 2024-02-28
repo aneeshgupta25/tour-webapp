@@ -3,6 +3,7 @@ import { login, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { showAlert } from './alerts';
 
 // DOM
 const mapBox = document.getElementById('map');
@@ -13,7 +14,7 @@ const updatePasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 
 if (mapBox) {
-  const locations = JSON.parse(map.dataset.locations);  
+  const locations = JSON.parse(map.dataset.locations);
   displayMap(locations);
 }
 if (loginForm) {
@@ -68,3 +69,6 @@ if (bookBtn) {
     bookTour(tourId);
   });
 }
+
+const alertMessage = document.querySelector('body').dataset.alert;
+if (alertMessage) showAlert('success', alertMessage, 20);

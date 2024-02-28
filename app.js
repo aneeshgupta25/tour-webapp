@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorController = require('./controllers/errorController');
@@ -16,13 +17,18 @@ const tourRoutes = require('./routes/tourRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const bookingsRoutes = require('./routes/bookingsRoutes');
 const viewRoutes = require('./routes/viewRoutes');
+const bookingsController = require('./controllers/bookingsController');
 
 const app = express();
+
+app.enable('trust proxy');
 
 // Set up Pug for template engine
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 // GLOBAL MIDDLEWARES
+app.use(cors()); //Access-Control-Allow-Origin
+app.options('*', cors());
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public'))); // `${__dirname}/public`
 
@@ -41,6 +47,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP. Kindly try again in an hour',
 });
 app.use('/api', limiter);
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingsController.webhookCheckout,
+);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
@@ -104,7 +116,7 @@ app.use(
 );
 
 // compresses the response sent by the API to client
-app.use(compression())
+app.use(compression());
 
 // Test Middleware
 app.use((req, res, next) => {
